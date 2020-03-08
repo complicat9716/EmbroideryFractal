@@ -9,34 +9,31 @@ stitches = [128, 2,
 	    0, 0,
             206, 206,]
 
-# for i in range(0, 10):
-#     stitches += [10, 0,]
-# for i in range(0, 10):
-#     stitches += [0, 10,]
-# for i in range(0, 10):
-#     stitches += [246, 0,]
-# for i in range(0, 10):
-#     stitches += [0, 246,]
-
 ##################################################################################################
 
 # control the step size
 stepsize = 0.1
 
-# starting point
+# starting time
 t = 0
 
-# end point
-end = 2*pi
+# end time
+t_end = 400
 
 # scale factor
 scale = 10
 
-while t < end:
+# Parameters
+R=5
+r=1.08
+a=3
+
+
+while t < t_end:
 
     ################################
     # x_axis
-    x_axis = int(scale*cos(t))
+    x_axis = int((R-r)*cos(r/R*t)+a*cos((1-r/R)*t))
 
     # Positive limit
     if x_axis > 127:
@@ -51,7 +48,7 @@ while t < end:
 
     ################################
     # y_axis
-    y_axis = int(scale*sin(t))
+    y_axis = int((R-r)*sin(r/R*t)-a*sin((1-r/R)*t))
 
     # Positive limit
     if y_axis > 127:
@@ -108,5 +105,5 @@ jefBytes = [124, 0, 0, 0,   # The byte offset of the first stitch
  
 
 jefBytes = bytes(jefBytes)
-with open("circle1.jef", "wb") as f:
+with open("Fractal_test.jef", "wb") as f:
     f.write(jefBytes)
