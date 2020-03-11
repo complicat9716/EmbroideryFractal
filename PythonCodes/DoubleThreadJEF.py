@@ -22,7 +22,6 @@ for i in range(0, 10):
 
 stitches1 = [128, 1,
             128, 2,
-            0, 0,
             0, 0,]
 
 # Middle steps
@@ -37,7 +36,6 @@ for i in range(0, 10):
 
 stitches2 = [128, 1,
             128, 2,
-            0, 0,
 	        0, 0,]
 
 # Middle steps
@@ -52,7 +50,6 @@ for i in range(0, 10):
 
 stitches3 = [128, 1,
             128, 2,
-            0, 0,
 	        0, 0,]
 
 # Middle steps
@@ -101,11 +98,10 @@ jefBytes = [124, 0, 0, 0,   # The byte offset of the first stitch
             50, 0, 0, 0,    # Top boundary distance from center (in 0.1 mm)
             50, 0, 0, 0,    # Right boundary distance from center (in 0.1 mm)
             50, 0, 0, 0,    # Bottom boundary distance from center (in 0.1 mm)
-            3, 0, 0, 0,    # Thread color (orange)
-            4, 0, 0, 0,    # Thread color (Green)
+            3, 0, 0, 0,    # Thread color
+            4, 0, 0, 0,    
             5, 0, 0, 0,
             6, 0, 0, 0,
-            13, 0, 0, 0,    # Unknown number
             ] + stitches
 
 
