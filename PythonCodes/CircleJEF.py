@@ -10,7 +10,7 @@ from math import *
 
 # Starting stitch
 stitches = [128, 2,
-	    0, 0,
+	        0, 0,
             206, 206,]
 
 # control the step size
