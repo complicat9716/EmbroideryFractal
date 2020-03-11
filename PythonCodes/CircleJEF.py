@@ -5,35 +5,31 @@ from math import *
 # Sides are 1 cm long, in ten stiches 1mm each
 # 246 is the unsigned 8-bit version of -10
 
+
+##################################################################################################
+
+# Starting stitch
 stitches = [128, 2,
 	    0, 0,
             206, 206,]
 
-##################################################################################################
-
 # control the step size
 stepsize = 0.1
 
-# starting time
+# starting point
 t = 0
 
-# end time
-t_end = 400
+# end point
+end = 2*pi
 
 # scale factor
 scale = 10
 
-# Parameters
-R=5
-r=1.08
-a=3
-
-
-while t < t_end:
+while t < end:
 
     ################################
     # x_axis
-    x_axis = int((R-r)*cos(r/R*t)+a*cos((1-r/R)*t))
+    x_axis = int(scale*cos(t))
 
     # Positive limit
     if x_axis > 127:
@@ -48,7 +44,7 @@ while t < t_end:
 
     ################################
     # y_axis
-    y_axis = int((R-r)*sin(r/R*t)-a*sin((1-r/R)*t))
+    y_axis = int(scale*sin(t))
 
     # Positive limit
     if y_axis > 127:
@@ -66,14 +62,15 @@ while t < t_end:
     stitches += [x_axis, y_axis,]
     t = t + stepsize
 
-##################################################################################################
-
 stitches +=  [128, 16]         # "Last stitch" command code
 
+##################################################################################################
+
+# jef headers
 jefBytes = [124, 0, 0, 0,   # The byte offset of the first stitch
             10, 0, 0, 0,    # Unknown number
-            ord("2"), ord("0"), ord("1"), ord("9"), # YYYY
-            ord("0"), ord("2"), ord("2"), ord("4"), # MMDD
+            ord("2"), ord("0"), ord("2"), ord("0"), # YYYY
+            ord("0"), ord("3"), ord("1"), ord("1"), # MMDD
             ord("1"), ord("2"), ord("3"), ord("0"), # HHMM
             ord("0"), ord("0"), 99, 0,  # SS00
             1, 0, 0, 0,     # Number of physical threads (1)
@@ -99,11 +96,11 @@ jefBytes = [124, 0, 0, 0,   # The byte offset of the first stitch
             50, 0, 0, 0,   # Top boundary distance from center (in 0.1 mm)
             50, 0, 0, 0,   # Right boundary distance from center (in 0.1 mm)
             50, 0, 0, 0,   # Bottom boundary distance from center (in 0.1 mm)
-            32, 0, 0, 0,         # Thread color (white)
+            32, 0, 0, 0,         # Thread color (orange)
             13, 0, 0, 0,        # Unknown number
             ] + stitches
  
-
+# write jef file
 jefBytes = bytes(jefBytes)
-with open("Fractal_test.jef", "wb") as f:
+with open("Circle_test.jef", "wb") as f:
     f.write(jefBytes)
