@@ -6,9 +6,8 @@ Num_thread = 4
 # Start first stitch
 
 
-stitches0 = [128, 2,
-            0, 0,
-	        0, 0,]
+stitches0 = [
+            0, 0,]
 
 # Middle steps
 for i in range(0, 10):    
@@ -20,13 +19,21 @@ for i in range(0, 10):
 ##################################################################################################
 # Start second stitch
 
-stitches1 = [128, 1,
-            128, 2,
+# stop and trim
+stitches1 = [128, 2,
+            0, 0,
+            128, 1,
+            0, 0,
             0, 0,]
 
 # Middle steps
 for i in range(0, 10):    
     stitches1 += [246, 0,]
+
+# trim
+stitches1 += [128, 2,
+            0, 0,]
+
 for i in range(0, 10):    
     stitches1 += [0, 246,]
 
