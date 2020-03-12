@@ -28,6 +28,7 @@ print(im.flatten())
 # test numpy array
 x2 = np.random.randint(10, size = (3, 4))
 print('x2 shape: ', x2.shape)
+print(len(x2))
 print(x2)
 
 
