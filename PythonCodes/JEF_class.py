@@ -44,26 +44,26 @@ class JEF():
 
         # Positive limit
         if x_axis > 127:
-            print("X positive limit exceed!!")
+            print("X positive limit exceeded !!")
 
         if x_axis < 0:
             x_axis = 256 + x_axis
 
             # negative limit
             if x_axis < 129:
-                print("X negative limit exceed!!")
+                print("X negative limit exceeded !!")
 
 
         # Positive limit
         if y_axis > 127:
-            print("Y positive limit exceed!!")
+            print("Y positive limit exceeded !!")
 
         if y_axis < 0:
             y_axis = 256 + y_axis
 
             # negative limit
             if y_axis < 129:
-                print("Y negative limit exceed!!")
+                print("Y negative limit exceeded !!")
                 
         self.stitches += [x_axis, y_axis,]
 
@@ -138,7 +138,7 @@ class JEF():
         # print(image.shape)
 
         # show the plot
-        plt.show()
+        # plt.show()
 
     def binarize_array(self, numpy_array, threshold = 200):
         # for each row
@@ -234,9 +234,26 @@ if __name__ == "__main__":
     import cv2
     import matplotlib.pyplot as plt
 
-   # The jef file only accepts 3 colors 
+    #############################################################################################
+    # User interface
+    print("Welcome to the Fractal Pattern JEF file generator! :)")
+    # jefName = input("Enter a file name (please include (.jef)): ")
+    jefName = "JEF_test_withEveryThing.jef"
+    # n_thread = int(input("Enter the number of threads: "))
+    n_thread = 3
+    # while True:
+    #     color_list = list(int(num) for num in input("Input a list of color code (seperate by space): ").strip().split())
+    #     if len(color_list) == n_thread:
+    #         break
+    #     else:
+    #         print('the number of color didn\'t match the number of threads. Try again.')
+    color_list = [1, 5, 6]
+    
+
+    #############################################################################################
+    # The jef file only accepts 3 colors 
     # JEF(File_name, number_of_thread, color_code_list)     default 1 thread and green color
-    Embroideryfile = JEF("JEF_test_withEveryThing.jef", 3, [1, 5, 6])
+    Embroideryfile = JEF(jefName, 3, [1, 5, 6])
 
     #############################################################################################
     # read a user specified image, take 125 as the threshold (show user the processed image)
@@ -249,24 +266,33 @@ if __name__ == "__main__":
     Embroideryfile.customMove(110, 0)
 
     ##############################################################################################
-    # fractal pattern
+    # Spriograph fractal pattern
 
     # control the step size
     stepsize = 1
+    # stepsize = int(input("Enter the step size of the factal pattern: "))
 
     # starting time
     t = 0
+    # t = int(input("Enter the start step of the factal pattern: "))
 
     # end time
     t_end = 5000
+    # t_end = int(input("Enter the end step of the factal pattern (the higher the endtime, the more complex the pattern will be!): "))
 
     # scale factor
     scale = 10
+    # scale = int(input("Enter the Scaling factor of the factal pattern: "))
 
-    # Parameters
+    # propeties Parameters
     R=7
+    # R = int(input("Enter the R parameter of the Spirograph pattern: "))
+
     r=1.08
+    # r = int(input("Enter the r parameter of the Spirograph pattern: "))
+
     a=4
+    # a = int(input("Enter the a parameter of the Spirograph pattern: "))
 
     while t < t_end:
         x_axis = (R-r)*cos(r/R*t/scale)+a*cos((1-r/R)*t/scale)
@@ -281,12 +307,26 @@ if __name__ == "__main__":
     #############################################################################################
     # displacement
     Embroideryfile.customMove(120, 0)
-    Embroideryfile.customMove(110, 0)
+    Embroideryfile.customMove(110, 50)
 
     ##############################################################################################
     # zig zag
-    for i in range(100):
-        Embroideryfile.zigZag(i)
+    # for i in range(100):
+    #     Embroideryfile.zigZag(i)
+
+    ##############################################################################################
+    # Text
+    filename = './Images/DM_text.png'
+    Embroideryfile.readImage(filename, 125)
+
+    for i in range(160):
+        Embroideryfile.moveLeft()
+
+    filename = './Images/cl_text.png'
+    Embroideryfile.readImage(filename, 200)
+
+    filename = './Images/yl_text.png'
+    Embroideryfile.readImage(filename, 200)
 
     ##############################################################################################
     # File generation
