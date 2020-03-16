@@ -58,6 +58,18 @@ class JEF():
                 
         self.stitches += [x_axis, y_axis,]
 
+
+    def zigZag(self, step):
+        x_axis = 10*sin(step)
+        y_axis = step
+
+        theta = pi/3
+
+        # 2D rotation
+        x_axis_new = cos(theta)*x_axis - sin(theta)*x_axis
+        y_axis_new = sin(theta)*x_axis + cos(theta)*x_axis
+
+        self.customSew(x_axis_new, y_axis_new)
         
     def generatefile(self):
 
@@ -163,6 +175,31 @@ if __name__ == "__main__":
 
         if t % 1000 == 0:
             Embroideryfile.nextColor()
-    
+
+    ################################
+    #zig-zag test
+    for i in range(20):
+        Embroideryfile.zigZag(i)
+
+    ################################
+    #circle 
+
+    # control the step size
+    stepsize = 0.1
+
+    # starting point
+    t = 0
+
+    # end point
+    end = 2*pi
+
+    while t < end:
+        x_axis = scale*cos(t)
+        y_axis = scale*sin(t)
+
+        Embroideryfile.customSew(x_axis, y_axis)
+        t = t + stepsize
+
+    ################################
     # File generation
     Embroideryfile.generatefile()
