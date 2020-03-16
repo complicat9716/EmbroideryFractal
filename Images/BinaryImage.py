@@ -4,6 +4,7 @@ import cv2
 import matplotlib.pyplot as plt
 
 
+# The function takes image file path as input, save the image to the specified location and binarilize the image at a specific threshold
 def binary_image(img_path, targetPath, threshold):
     
     # load image
@@ -29,8 +30,11 @@ def binary_image(img_path, targetPath, threshold):
     # save image
     cv2.imwrite(targetPath, image)
 
+# loop through the image array
 def binarize_array(numpy_array, threshold = 200):
+    # for each row
     for i in range(len(numpy_array)):
+        #for each column
         for j in range(len(numpy_array[0])):
             if numpy_array[i][j] > threshold:
                 numpy_array[i][j] = 255
