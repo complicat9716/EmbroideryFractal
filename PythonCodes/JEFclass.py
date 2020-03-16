@@ -6,7 +6,7 @@ class JEF():
         self.jefBytes = None            # empty file
         self.stitches = [128, 2,
                         0, 0,
-                        20, 20,]        # start with an offset 1mm, 1mm
+                        10, 10,]        # start with an offset 1mm, 1mm
         self.fileName = fileName        # store the file name
         self.nThread = nThread          # number of threads
         self.colorINFO = []             # color info
@@ -14,6 +14,12 @@ class JEF():
         # store the color information
         for i in range(nThread):
             self.colorINFO += [color_list[i], 0, 0, 0,]
+
+        # self.colorINFO += [1, 0, 0, 0,]
+        # self.colorINFO += [5, 0, 0, 0,]
+        # self.colorINFO += [6, 0, 0, 0,]
+
+        print(self.colorINFO)
 
     ##############################################################################
     # Sew functions
@@ -132,8 +138,8 @@ class JEF():
                         ord("0"), ord("2"), ord("2"), ord("4"), # MMDD
                         ord("1"), ord("2"), ord("3"), ord("0"), # HHMM
                         ord("0"), ord("0"), 99, 0,  # SS00
-                        self.nThread, 0, 0, 0,     # Number of physical threads (1)
-                        ((len(self.stitches))//2) & 0xff, 0, 0, 0,     # Number of stitches
+                        self.nThread, 0, 0, 0,     # Number of physical threads
+                        0, 0, 0, 0,     # Number of stitches
                         3, 0, 0, 0,     # Sewing machine hoop             
                         50, 0, 0, 0,    # Left boundary distance from center (in 0.1 mm)
                         50, 0, 0, 0,    # Top boundary distance from center (in 0.1 mm)
@@ -157,6 +163,8 @@ class JEF():
                         50, 0, 0, 0,    # Bottom boundary distance from center (in 0.1 mm)
                         ] + self.colorINFO + self.stitches
 
+        print(self.colorINFO + self.stitches)
+
         # Convert bytes
         self.jefBytes = bytes(self.jefBytes)
 
@@ -172,7 +180,7 @@ if __name__ == "__main__":
     from math import *
 
     # JEF(File_name, number_of_thread, color_code_list)     default 1 thread and green color
-    Embroideryfile = JEF("JEF_test.jef", 4, [14, 15, 16, 17])
+    Embroideryfile = JEF("JEF_test.jef", 4, [1, 5, 6, 12])
 
     for i in range(0, 10):  
         Embroideryfile.sewRight()
