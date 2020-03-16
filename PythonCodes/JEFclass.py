@@ -2,13 +2,18 @@
 class JEF():
 
     # initialize the pattern with 1mm offset in both x and y
-    def __init__(self, fileName, nThread = 1):
-        self.jefBytes = None
+    def __init__(self, fileName, nThread = 1, color_list = [6]):
+        self.jefBytes = None            # empty file
         self.stitches = [128, 2,
                         0, 0,
-                        10, 10,]
-        self.fileName = fileName
-        self.nThread = nThread
+                        20, 20,]        # start with an offset 1mm, 1mm
+        self.fileName = fileName        # store the file name
+        self.nThread = nThread          # number of threads
+        self.colorINFO = []             # color info
+
+        # store the color information
+        for i in range(nThread):
+            self.colorINFO += [color_list[i], 0, 0, 0,]
 
     ##############################################################################
     # Sew functions
@@ -150,11 +155,7 @@ class JEF():
                         50, 0, 0, 0,    # Top boundary distance from center (in 0.1 mm)
                         50, 0, 0, 0,    # Right boundary distance from center (in 0.1 mm)
                         50, 0, 0, 0,    # Bottom boundary distance from center (in 0.1 mm)
-                        6, 0, 0, 0,    # Thread color
-                        4, 0, 0, 0,    
-                        5, 0, 0, 0,
-                        6, 0, 0, 0,
-                        ] + self.stitches
+                        ] + self.colorINFO + self.stitches
 
         # Convert bytes
         self.jefBytes = bytes(self.jefBytes)
@@ -170,25 +171,25 @@ if __name__ == "__main__":
 
     from math import *
 
-    # JEF(File_name, number_of_thread)     default 1 thread
-    Embroideryfile = JEF("JEF_test.jef")
+    # JEF(File_name, number_of_thread, color_code_list)     default 1 thread and green color
+    Embroideryfile = JEF("JEF_test.jef", 4, [14, 15, 16, 17])
 
     for i in range(0, 10):  
         Embroideryfile.sewRight()
 
-    Embroideryfile.customMove(60, 60)
+    Embroideryfile.customMove(60, -60)
     Embroideryfile.nextColor()
 
     for i in range(0, 10):  
         Embroideryfile.sewDown()
 
-    Embroideryfile.customMove(60, 60)
+    Embroideryfile.customMove(-60, -60)
     Embroideryfile.nextColor()
 
     for i in range(0, 10):  
         Embroideryfile.sewLeft()
 
-    Embroideryfile.customMove(60, 60)
+    Embroideryfile.customMove(-60, 60)
     Embroideryfile.nextColor()
 
     for i in range(0, 10):  
