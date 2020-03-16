@@ -1,33 +1,44 @@
+# JEF class for controlling the Embroidery pattern
 class JEF():
 
-    def __init__(self, nThread = 1):
+    # initialize the pattern with 1mm offset in both x and y
+    def __init__(self, fileName, nThread = 1):
         self.jefBytes = None
         self.stitches = [128, 2,
                         0, 0,
                         10, 10,]
+        self.fileName = fileName
         self.nThread = nThread
 
+    # sew left 1mm
     def sewLeft(self):
         self.stitches += [246, 0,]
 
+    # sew right 1mm
     def sewRight(self):
         self.stitches += [10, 0,]
 
+    # sew up 1mm
     def sewUp(self):
         self.stitches += [0, 10,]
 
+    # sew down 1mm
     def sewDown(self):
         self.stitches += [0, 246,]
 
-    def trimSew(self):
+    # trim the wire and move to the specified location
+    def moveThread(self,  x_axis, y_axis):
         self.stitches += [128, 2,
                          0, 0,]
+        customSew(x_axis, y_axis)
 
+    # change to the next thread color in system
     def nextColor(self):
         self.stitches += [128, 1,
                          0, 0,
                          0, 0,]
 
+    # user custom sew locations (with validate methods)
     def customSew(self, x_axis, y_axis):
 
         x_axis = int(x_axis)
@@ -58,7 +69,7 @@ class JEF():
                 
         self.stitches += [x_axis, y_axis,]
 
-
+    # testing zig zag
     def zigZag(self, step):
         x_axis = 10*sin(step)
         y_axis = step
@@ -69,8 +80,9 @@ class JEF():
         x_axis_new = cos(theta)*x_axis - sin(theta)*x_axis
         y_axis_new = sin(theta)*x_axis + cos(theta)*x_axis
 
-        self.customSew(x_axis_new, y_axis_new)
+        self.customSew(x_axis_new, y_axis)
         
+    # generate the JEF file
     def generatefile(self):
 
         self.stitches +=  [128, 16] 
@@ -114,7 +126,7 @@ class JEF():
         self.jefBytes = bytes(self.jefBytes)
 
         # write file
-        with open("fileClass_test.jef", "wb") as f:
+        with open(self.fileName, "wb") as f:
             f.write(self.jefBytes)
 
 
@@ -124,8 +136,8 @@ if __name__ == "__main__":
 
     from math import *
 
-    # JEF(number_of_thread)     default 1 thread
-    Embroideryfile = JEF()
+    # JEF(File_name, number_of_thread)     default 1 thread
+    Embroideryfile = JEF("fileClass_test.jef")
 
     for i in range(0, 10):  
         Embroideryfile.sewRight()
