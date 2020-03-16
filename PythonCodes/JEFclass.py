@@ -58,10 +58,11 @@ class JEF():
                 
         self.stitches += [x_axis, y_axis,]
 
-    def endSew(self):
+        
+    def generatefile(self):
+
         self.stitches +=  [128, 16] 
 
-    def generatefile(self):
         self.jefBytes = [124, 0, 0, 0,   # The byte offset of the first stitch
                         10, 0, 0, 0,    # Unknown number
                         ord("2"), ord("0"), ord("1"), ord("9"), # YYYY
@@ -164,5 +165,4 @@ if __name__ == "__main__":
             Embroideryfile.nextColor()
     
     # File generation
-    Embroideryfile.endSew()
     Embroideryfile.generatefile()
