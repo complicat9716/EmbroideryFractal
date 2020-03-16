@@ -110,17 +110,72 @@ class JEF():
     # Other functions
 
     # testing zig zag
-    def zigZag(self, step):
-        x_axis = 10*sin(step)
-        y_axis = step
+    def zigZag(self, flag):
+        x_axis = ((-1)**flag) * (10)
+        y_axis = 10
 
-        theta = pi/3
+        self.customSew(x_axis, y_axis)
 
-        # 2D rotation
-        x_axis_new = cos(theta)*x_axis - sin(theta)*x_axis
-        y_axis_new = sin(theta)*x_axis + cos(theta)*x_axis
+    ##############################################################################
+    # image processing
 
-        self.customSew(x_axis_new, y_axis)
+    # read image
+    def readImage(self, img_path, threshold):
+        # load image
+        image_file = Image.open(img_path)
+
+        # convert image to light intensity
+        image = image_file.convert('L')
+        image = numpy.array(image)
+
+        # binarlize image
+        image = self.binarize_array(image, threshold)
+
+        # show gray scale image
+        plt.gray()
+        plt.imshow(image)
+
+        # print(image.shape)
+
+        # show the plot
+        plt.show()
+
+    def binarize_array(self, numpy_array, threshold = 200):
+        # for each row
+        for i in range(len(numpy_array)):
+
+            # if it is a even row
+            if i%2 == 0:
+
+                # read the image from left to right
+                for j in range(len(numpy_array[0])):
+
+                    # if there is a black pixel make a stitch, else move the same distance
+                    if numpy_array[i][j] > threshold:
+                        numpy_array[i][j] = 255
+                        self.moveRight()
+                    else:
+                        numpy_array[i][j] = 0
+                        self.sewRight()
+
+            # if it is a odd row
+            else:
+
+                # read the image from right to left
+                for j in reversed(range(len(numpy_array[0]))):
+
+                    # if there is a black pixel make a stitch, else move the same distance
+                    if numpy_array[i][j] > threshold:
+                        numpy_array[i][j] = 255
+                        self.moveLeft()
+                    else:
+                        numpy_array[i][j] = 0
+                        self.sewLeft()
+
+            # move the thread down after each row
+            self.moveDown()
+
+        return numpy_array
         
     ##############################################################################
     # generate the JEF file
@@ -174,31 +229,65 @@ class JEF():
 if __name__ == "__main__":
 
     from math import *
+    import numpy
+    from PIL import Image
+    import cv2
+    import matplotlib.pyplot as plt
 
-   # TODO: The jef file only accepts 3 colors 
+   # The jef file only accepts 3 colors 
     # JEF(File_name, number_of_thread, color_code_list)     default 1 thread and green color
-    Embroideryfile = JEF("JEF_test.jef", 3, [1, 5, 6])
+    Embroideryfile = JEF("JEF_test_withEveryThing.jef", 3, [1, 5, 6])
 
-    for i in range(0, 10):  
-        Embroideryfile.sewRight()
+    #############################################################################################
+    # read a user specified image, take 125 as the threshold (show user the processed image)
+    filename = './Images/CU_VerySmall.png'
+    Embroideryfile.readImage(filename, 125)
 
-    Embroideryfile.customMove(60, -60)
-    Embroideryfile.nextColor()
+    #############################################################################################
+    # displacement
+    Embroideryfile.customMove(120, -60)
+    Embroideryfile.customMove(110, 0)
 
-    for i in range(0, 10):  
-        Embroideryfile.sewDown()
+    ##############################################################################################
+    # fractal pattern
 
-    Embroideryfile.customMove(-60, -60)
-    Embroideryfile.nextColor()
+    # control the step size
+    stepsize = 1
 
-    for i in range(0, 10):  
-        Embroideryfile.sewLeft()
+    # starting time
+    t = 0
 
-    Embroideryfile.customMove(-60, 60)
-    Embroideryfile.nextColor()
+    # end time
+    t_end = 5000
 
-    for i in range(0, 10):  
-        Embroideryfile.sewUp()
+    # scale factor
+    scale = 10
 
+    # Parameters
+    R=7
+    r=1.08
+    a=4
+
+    while t < t_end:
+        x_axis = (R-r)*cos(r/R*t/scale)+a*cos((1-r/R)*t/scale)
+        y_axis = (R-r)*sin(r/R*t/scale)-a*sin((1-r/R)*t/scale)
+
+        Embroideryfile.customSew(x_axis, y_axis)
+        t = t + stepsize
+
+        if t % 1000 == 0:
+            Embroideryfile.nextColor()
+
+    #############################################################################################
+    # displacement
+    Embroideryfile.customMove(120, 0)
+    Embroideryfile.customMove(110, 0)
+
+    ##############################################################################################
+    # zig zag
+    for i in range(100):
+        Embroideryfile.zigZag(i)
+
+    ##############################################################################################
     # File generation
     Embroideryfile.generatefile()

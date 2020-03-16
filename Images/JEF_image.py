@@ -19,34 +19,39 @@ def binary_image(img_path, targetPath, threshold):
 
     # show gray scale image
     plt.gray()
-    plt.imshow(image[0:300, 0:150])
+    plt.imshow(image)
 
     print(image.shape)
 
-    # show histogram
-    plt.figure()
-    plt.hist(image.flatten())
-
     plt.show()
 
-    # save image
-    #cv2.imwrite(targetPath, image)
 
 # loop through the image array
 def binarize_array(numpy_array, threshold = 200):
     # for each row
     for i in range(len(numpy_array)):
 
+        # if it is a even row
         if i%2 == 0:
+
+            # read the image from left to right
             for j in range(len(numpy_array[0])):
+
+                # if there is a black pixel make a stitch, else move the same distance
                 if numpy_array[i][j] > threshold:
                     numpy_array[i][j] = 255
                     Embroideryfile.moveRight()
                 else:
                     numpy_array[i][j] = 0
                     Embroideryfile.sewRight()
+
+        # if it is a odd row
         else:
+
+            # read the image from right to left
             for j in reversed(range(len(numpy_array[0]))):
+
+                # if there is a black pixel make a stitch, else move the same distance
                 if numpy_array[i][j] > threshold:
                     numpy_array[i][j] = 255
                     Embroideryfile.moveLeft()
@@ -54,6 +59,7 @@ def binarize_array(numpy_array, threshold = 200):
                     numpy_array[i][j] = 0
                     Embroideryfile.sewLeft()
 
+        # move the thread down after each row
         Embroideryfile.moveDown()
 
     return numpy_array
