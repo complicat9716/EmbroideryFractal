@@ -1,4 +1,4 @@
-from JEFclass import JEF
+from JEF_class import JEF
 from math import *
 
 

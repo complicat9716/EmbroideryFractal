@@ -15,11 +15,7 @@ class JEF():
         for i in range(nThread):
             self.colorINFO += [color_list[i], 0, 0, 0,]
 
-        # self.colorINFO += [1, 0, 0, 0,]
-        # self.colorINFO += [5, 0, 0, 0,]
-        # self.colorINFO += [6, 0, 0, 0,]
-
-        print(self.colorINFO)
+        # print(self.colorINFO)
 
     ##############################################################################
     # Sew functions
@@ -163,7 +159,7 @@ class JEF():
                         50, 0, 0, 0,    # Bottom boundary distance from center (in 0.1 mm)
                         ] + self.colorINFO + self.stitches
 
-        print(self.colorINFO + self.stitches)
+        # print(self.colorINFO + self.stitches)
 
         # Convert bytes
         self.jefBytes = bytes(self.jefBytes)
@@ -179,8 +175,9 @@ if __name__ == "__main__":
 
     from math import *
 
+   # TODO: The jef file only accepts 3 colors 
     # JEF(File_name, number_of_thread, color_code_list)     default 1 thread and green color
-    Embroideryfile = JEF("JEF_test.jef", 4, [1, 5, 6, 12])
+    Embroideryfile = JEF("JEF_test.jef", 3, [1, 5, 6])
 
     for i in range(0, 10):  
         Embroideryfile.sewRight()
