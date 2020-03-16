@@ -44,26 +44,26 @@ class JEF():
 
         # Positive limit
         if x_axis > 127:
-            print("X positive limit exceeded !!")
+            print("CustomSew X positive limit exceeded !!")
 
         if x_axis < 0:
             x_axis = 256 + x_axis
 
             # negative limit
             if x_axis < 129:
-                print("X negative limit exceeded !!")
+                print("CustomSew X negative limit exceeded !!")
 
 
         # Positive limit
         if y_axis > 127:
-            print("Y positive limit exceeded !!")
+            print("CustomSew Y positive limit exceeded !!")
 
         if y_axis < 0:
             y_axis = 256 + y_axis
 
             # negative limit
             if y_axis < 129:
-                print("Y negative limit exceeded !!")
+                print("CustomSew Y negative limit exceeded !!")
                 
         self.stitches += [x_axis, y_axis,]
 
