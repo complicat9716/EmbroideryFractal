@@ -10,6 +10,9 @@ class JEF():
         self.fileName = fileName
         self.nThread = nThread
 
+    ##############################################################################
+    # Sew functions
+
     # sew left 1mm
     def sewLeft(self):
         self.stitches += [246, 0,]
@@ -25,18 +28,6 @@ class JEF():
     # sew down 1mm
     def sewDown(self):
         self.stitches += [0, 246,]
-
-    # trim the wire and move to the specified location
-    def moveThread(self,  x_axis, y_axis):
-        self.stitches += [128, 2,
-                         0, 0,]
-        customSew(x_axis, y_axis)
-
-    # change to the next thread color in system
-    def nextColor(self):
-        self.stitches += [128, 1,
-                         0, 0,
-                         0, 0,]
 
     # user custom sew locations (with validate methods)
     def customSew(self, x_axis, y_axis):
@@ -69,6 +60,48 @@ class JEF():
                 
         self.stitches += [x_axis, y_axis,]
 
+    ##############################################################################
+    # Movement functions
+
+    # trim the thread
+    def trimThread(self):
+        self.stitches += [128, 2,
+                         0, 0,]
+
+    # move left by 1mm
+    def moveLeft(self):
+        self.trimThread()
+        self.stitches += [246, 0,]
+
+    # move right by 1mm
+    def moveRight(self):
+        self.trimThread()
+        self.stitches += [10, 0,]
+
+    # move up by 1mm
+    def moveUp(self):
+        self.trimThread()
+        self.stitches += [0, 10,]
+
+    # move down by 1mm
+    def moveDown(self):
+        self.trimThread()
+        self.stitches += [0, 246,]
+
+    # trim the wire and move to the specified location
+    def customMove(self,  x_axis, y_axis):
+        self.trimThread()
+        self.customSew(x_axis, y_axis)
+
+    # change to the next thread color in system
+    def nextColor(self):
+        self.stitches += [128, 1,
+                         0, 0,
+                         0, 0,]
+
+    ##############################################################################
+    # Other functions
+
     # testing zig zag
     def zigZag(self, step):
         x_axis = 10*sin(step)
@@ -82,6 +115,7 @@ class JEF():
 
         self.customSew(x_axis_new, y_axis)
         
+    ##############################################################################
     # generate the JEF file
     def generatefile(self):
 
@@ -116,7 +150,7 @@ class JEF():
                         50, 0, 0, 0,    # Top boundary distance from center (in 0.1 mm)
                         50, 0, 0, 0,    # Right boundary distance from center (in 0.1 mm)
                         50, 0, 0, 0,    # Bottom boundary distance from center (in 0.1 mm)
-                        3, 0, 0, 0,    # Thread color
+                        6, 0, 0, 0,    # Thread color
                         4, 0, 0, 0,    
                         5, 0, 0, 0,
                         6, 0, 0, 0,
@@ -130,88 +164,35 @@ class JEF():
             f.write(self.jefBytes)
 
 
-
+#########################################################################################
 # Test unit
 if __name__ == "__main__":
 
     from math import *
 
     # JEF(File_name, number_of_thread)     default 1 thread
-    Embroideryfile = JEF("fileClass_test.jef")
+    Embroideryfile = JEF("JEF_test.jef")
 
     for i in range(0, 10):  
         Embroideryfile.sewRight()
-    
+
+    Embroideryfile.customMove(60, 60)
     Embroideryfile.nextColor()
 
     for i in range(0, 10):  
         Embroideryfile.sewDown()
 
+    Embroideryfile.customMove(60, 60)
     Embroideryfile.nextColor()
 
     for i in range(0, 10):  
         Embroideryfile.sewLeft()
 
+    Embroideryfile.customMove(60, 60)
     Embroideryfile.nextColor()
 
     for i in range(0, 10):  
         Embroideryfile.sewUp()
 
-    ################################
-    # fractal pattern
-
-
-    # control the step size
-    stepsize = 1
-
-    # starting time
-    t = 0
-
-    # end time
-    t_end = 5000
-
-    # scale factor
-    scale = 10
-
-    # Parameters
-    R=7
-    r=1.08
-    a=4
-
-    while t < t_end:
-        x_axis = (R-r)*cos(r/R*t/scale)+a*cos((1-r/R)*t/scale)
-        y_axis = (R-r)*sin(r/R*t/scale)-a*sin((1-r/R)*t/scale)
-
-        Embroideryfile.customSew(x_axis, y_axis)
-        t = t + stepsize
-
-        if t % 1000 == 0:
-            Embroideryfile.nextColor()
-
-    ################################
-    #zig-zag test
-    for i in range(20):
-        Embroideryfile.zigZag(i)
-
-    ################################
-    #circle 
-
-    # control the step size
-    stepsize = 0.1
-
-    # starting point
-    t = 0
-
-    # end point
-    end = 2*pi
-
-    while t < end:
-        x_axis = scale*cos(t)
-        y_axis = scale*sin(t)
-
-        Embroideryfile.customSew(x_axis, y_axis)
-        t = t + stepsize
-
-    ################################
     # File generation
     Embroideryfile.generatefile()
