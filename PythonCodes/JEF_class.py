@@ -1,5 +1,5 @@
 # JEF class for controlling the Embroidery pattern
-from PIL import Image
+from PIL import Image, ImageDraw
 import numpy
 import matplotlib.pyplot as plt
 
@@ -120,6 +120,17 @@ class JEF():
 
         self.customSew(x_axis, y_axis)
 
+    def SpirographPattern(self, t, stepsize, t_end, R, r, a):
+        while t < t_end:
+            x_axis = (R-r)*cos(r/R*t/scale)+a*cos((1-r/R)*t/scale)
+            y_axis = (R-r)*sin(r/R*t/scale)-a*sin((1-r/R)*t/scale)
+
+            Embroideryfile.customSew(x_axis, y_axis)
+            t = t + stepsize
+
+            if t % 1000 == 0:
+                Embroideryfile.nextColor()
+
     ##############################################################################
     # image processing
 
@@ -139,11 +150,34 @@ class JEF():
         plt.gray()
         plt.imshow(image)
 
-        # print(image.shape)
+        # show the plot
+        plt.show()
+
+    # read text
+    def readText(self, text):
+
+        # create a white canvas
+        img = Image.new('RGB', (150, 12), color = (255, 255, 255))
+
+        # draw black text on white canvas
+        d = ImageDraw.Draw(img)
+        d.text((1,-1), text, fill=(0,0,0))
+
+        # convert to light intensity
+        image = img.convert('L')
+        image = numpy.array(image)
+
+        # binarlize image
+        image = self.binarize_array(image, 200)
+
+        # show gray scale image
+        plt.gray()
+        plt.imshow(image)
 
         # show the plot
         plt.show()
 
+    # combine the binary information with the JEF file
     def binarize_array(self, numpy_array, threshold = 200):
         # for each row
         for i in range(len(numpy_array)):
@@ -261,7 +295,7 @@ if __name__ == "__main__":
 
     #############################################################################################
     # read a user specified image, take 125 as the threshold (show user the processed image)
-    filename = './Images/CU_VerySmall.png'
+    filename = './Images/CU.png'
     Embroideryfile.readImage(filename, 125)
 
     #############################################################################################
@@ -298,39 +332,24 @@ if __name__ == "__main__":
     a=4
     # a = int(input("Enter the a parameter of the Spirograph pattern: "))
 
-    while t < t_end:
-        x_axis = (R-r)*cos(r/R*t/scale)+a*cos((1-r/R)*t/scale)
-        y_axis = (R-r)*sin(r/R*t/scale)-a*sin((1-r/R)*t/scale)
+    Embroideryfile.SpirographPattern(t, stepsize, t_end, R, r, a)
 
-        Embroideryfile.customSew(x_axis, y_axis)
-        t = t + stepsize
-
-        if t % 1000 == 0:
-            Embroideryfile.nextColor()
-
+    
     #############################################################################################
     # displacement
     Embroideryfile.customMove(120, 0)
     Embroideryfile.customMove(110, 50)
 
     ##############################################################################################
-    # zig zag
-    # for i in range(100):
-    #     Embroideryfile.zigZag(i)
-
-    ##############################################################################################
     # Text
-    filename = './Images/DM_text.png'
-    Embroideryfile.readImage(filename, 125)
+    text = 'Digital Manufacturing'
+    Embroideryfile.readText(text)
 
-    for i in range(160):
-        Embroideryfile.moveLeft()
+    text = 'Chong Liu (cl3896)'
+    Embroideryfile.readText(text)
 
-    filename = './Images/cl_text.png'
-    Embroideryfile.readImage(filename, 200)
-
-    filename = './Images/yl_text.png'
-    Embroideryfile.readImage(filename, 200)
+    text = 'Yachao Liu (yl4269)'
+    Embroideryfile.readText(text)
 
     ##############################################################################################
     # File generation
