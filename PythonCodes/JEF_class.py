@@ -1,4 +1,8 @@
 # JEF class for controlling the Embroidery pattern
+from PIL import Image
+import numpy
+import matplotlib.pyplot as plt
+
 class JEF():
 
     # initialize the pattern with 1mm offset in both x and y
@@ -138,7 +142,7 @@ class JEF():
         # print(image.shape)
 
         # show the plot
-        # plt.show()
+        plt.show()
 
     def binarize_array(self, numpy_array, threshold = 200):
         # for each row
